@@ -12,7 +12,7 @@
 
 name: df_generate_header_comments
 description: A tool to generate header comments for your source files.
-version: 0.1.0
+version: 0.1.1
 repository: https://github.com/robmllze/df_generate_header_comments
 funding:
   - https://www.buymeacoffee.com/robmllze
@@ -47,5 +47,5 @@ dev_dependencies:
 
 executables:
   genhdr: genhdr
-  genscr-v0: genhdr-df
+  genscr-df: genhdr-df
   genscr-v1: genhdr-v1
