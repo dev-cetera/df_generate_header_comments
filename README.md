@@ -11,17 +11,7 @@ Dart & Flutter Packages by DevCetra.com & contributors.
 
 ## Summary
 
-<!-- TODO: Write summary here -->
-
-For a full feature set, please refer to the [API reference](https://pub.dev/documentation/df_generate_header_comments/).
-
-## Usage Example
-
-<!-- TODO: Write usage example here -->
-
-## Installation
-
-Use this package as a dependency by adding it to your `pubspec.yaml` file (see [here](https://pub.dev/packages/df_generate_header_comments/install)).
+This tool automatically adds standardized comment headers to your source files, enhancing protection, consistency, and authenticity across your codebase.
 
 ---
 

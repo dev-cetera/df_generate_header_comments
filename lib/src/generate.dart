@@ -32,19 +32,49 @@ Future<void> generateCommentHeaders({
         pathPatterns: pathPatterns,
       ),
     },
+    categorizedPathPatterns: [
+      const CategorizedPattern(
+        pattern: r'^(?!.*\.g\..*\.dart$).*\.dart$',
+        category: _Languages.DART,
+      ),
+      const CategorizedPattern(
+        pattern: r'^(?!.*\.g\..*\.md$).*\.md$',
+        category: _Languages.MD,
+      ),
+      const CategorizedPattern(
+        pattern: r'^(?!.*\.g\..*\.js$).*\.js$',
+        category: _Languages.JS,
+      ),
+      const CategorizedPattern(
+        pattern: r'^(?!.*\.g\..*\.jsonc$).*\.jsonc$',
+        category: _Languages.JSONC,
+      ),
+      const CategorizedPattern(
+        pattern: r'^(?!.*\.g\..*\.yaml$).*\.yaml$',
+        category: _Languages.YAML,
+      ),
+      const CategorizedPattern(
+        pattern: r'^(?!.*\.g\..*\.ts$).*\.ts$',
+        category: _Languages.TS,
+      ),
+      const CategorizedPattern(
+        pattern: r'^(?!.*\.g\..*\.ps1$).*\.ps1$',
+        category: _Languages.PS1,
+      ),
+    ],
   );
   final sourceFileExplorerResults = await sourceFileExporer.explore();
 
-  final template = extractCodeFromMarkdown(
+  final templateLines = extractCodeFromMarkdown(
     await loadFileFromPathOrUrl(templateFilePath),
-  );
+  ).trim().split('\n');
 
   // ---------------------------------------------------------------------------
 
   final fileResults = sourceFileExplorerResults.filePathResults;
 
   for (final fileResult in fileResults) {
-    await _generateForFile(fileResult, template);
+    await _generateForFile(fileResult, templateLines);
   }
 
   Here().debugLogStop('Done!');
@@ -52,16 +82,28 @@ Future<void> generateCommentHeaders({
 
 // ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
 
-Future<void> _generateForFile(FilePathExplorerResult fileResult, String template) async {
+Future<void> _generateForFile(FilePathExplorerResult fileResult, List<String> templateLines) async {
+  if (!_Languages.values.contains(fileResult.category)) return;
+
   final filePath = fileResult.path;
+
   final commentStarter = langFileCommentStarters[p.extension(filePath).toLowerCase()] ?? '//';
-  final lines = (await readFileAsLines(filePath))!;
+  final lines = (await readFileAsLines(filePath)) ?? [];
+
   if (lines.isNotEmpty) {
+    // Replace leading '//' in all template lines with the comment starter
+    templateLines = templateLines.map((line) {
+      if (line.trim().startsWith('//')) {
+        return commentStarter + line.substring(2); // Replace leading // only
+      }
+      return line; // Return the line unchanged if it doesn't start with //
+    }).toList();
+
     for (var n = 0; n < lines.length; n++) {
       final line = lines[n].trim();
       if (line.isEmpty || !line.startsWith(commentStarter)) {
         final withoutHeader = lines.sublist(n).join('\n');
-        final withHeader = '${template.trim()}\n\n${withoutHeader.trim()}';
+        final withHeader = '${templateLines.join('\n')}\n\n${withoutHeader.trim()}';
         await writeFile(filePath, withHeader);
         break;
       }
@@ -71,37 +113,49 @@ Future<void> _generateForFile(FilePathExplorerResult fileResult, String template
 
 // ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
 
+enum _Languages {
+  DART,
+  JS,
+  JSONC,
+  MD,
+  PS1,
+  TS,
+  YAML,
+}
+
+// ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
+
 final langFileCommentStarters = {
   '.ada': '--', // Ada
-  '.awk': '#', // AWK
+  '.awk': '##', // AWK
   '.bat': 'REM ', // Batch
-  '.cfg': '#', // Configuration files
+  '.cfg': '##', // Configuration files
   '.clj': ';', // Clojure
   '.cob': '*>', // COBOL
   '.erl': '%', // Erlang
-  '.exs': '#', // Elixir
+  '.exs': '##', // Elixir
   '.f90': '!', // Fortran
-  '.fish': '#', // Fish Shell
+  '.fish': '##', // Fish Shell
   '.hs': '--', // Haskell
   '.ini': ';', // INI configuration files
   '.jsonc': '//', // JSONC
   '.lisp': ';', // Lisp
   '.lua': '--', // Lua
   '.m': '%', // MATLAB and Octave
-  '.pl': '#', // Perl
-  '.ps1': '#', // PowerShell
-  '.py': '#', // Python
-  '.r': '#', // R
-  '.rb': '#', // Ruby
+  '.pl': '##', // Perl
+  '.ps1': '##', // PowerShell
+  '.py': '##', // Python
+  '.r': '##', // R
+  '.rb': '##', // Ruby
   '.rst': '..', // reStructuredText, comment blocks
   '.scm': ';', // Scheme
-  '.sed': '#', // SED
-  '.sh': '#', // Bash
+  '.sed': '##', // SED
+  '.sh': '##', // Bash
   '.sql': '--', // SQL
-  '.tcl': '#', // TCL
+  '.tcl': '##', // TCL
   '.tex': '%', // LaTeX documents
   '.vbs': "'", // VBScript
   '.vim': '"', // Vim script
-  '.yaml': '#', // YAML
-  '.zsh': '#', // Zsh
+  '.yaml': '##', // YAML
+  '.zsh': '##', // Zsh
 }.map((k, v) => MapEntry(k.toLowerCase(), v));

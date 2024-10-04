@@ -20,7 +20,8 @@ import 'generate.dart';
 Future<void> generateCommentHeadersApp(List<String> args) async {
   await runCommandLineApp(
     title: 'Generate Comment Headers by DevCetra.com',
-    description: '...',
+    description:
+        'This tool automatically adds standardized comment headers to your source files, enhancing protection, consistency, and authenticity across your codebase.',
     args: args,
     parser: ArgParser()
       ..addFlag(
@@ -51,7 +52,7 @@ Future<void> generateCommentHeadersApp(List<String> args) async {
         abbr: 't',
         help: 'Template file path or URL.',
         defaultsTo:
-            'https://raw.githubusercontent.com/robmllze/df_generate_comment_headers/main/templates/v0.dart.md',
+            'https://raw.githubusercontent.com/robmllze/df_generate_comment_headers/main/templates/v1.dart.md',
       ),
     onResults: (parser, results) {
       return _ArgsChecker(

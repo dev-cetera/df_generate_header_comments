@@ -17,5 +17,11 @@ import 'package:df_log/df_log.dart';
 
 void main(List<String> args) async {
   DebugLog.debugOnly = false;
-  await generateCommentHeadersApp(args);
+  await generateCommentHeadersApp(
+    [
+      ...args,
+      '--template',
+      'https://raw.githubusercontent.com/robmllze/df_generate_comment_headers/main/templates/v1.dart.md',
+    ],
+  );
 }
