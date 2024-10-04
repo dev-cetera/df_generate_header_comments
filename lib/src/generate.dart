@@ -82,12 +82,14 @@ Future<void> generateCommentHeaders({
 
 // ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
 
-Future<void> _generateForFile(FilePathExplorerResult fileResult, List<String> templateLines) async {
+Future<void> _generateForFile(
+    FilePathExplorerResult fileResult, List<String> templateLines,) async {
   if (!_Languages.values.contains(fileResult.category)) return;
 
   final filePath = fileResult.path;
 
-  final commentStarter = langFileCommentStarters[p.extension(filePath).toLowerCase()] ?? '//';
+  final commentStarter =
+      langFileCommentStarters[p.extension(filePath).toLowerCase()] ?? '//';
   final lines = (await readFileAsLines(filePath)) ?? [];
 
   if (lines.isNotEmpty) {
@@ -103,7 +105,8 @@ Future<void> _generateForFile(FilePathExplorerResult fileResult, List<String> te
       final line = lines[n].trim();
       if (line.isEmpty || !line.startsWith(commentStarter)) {
         final withoutHeader = lines.sublist(n).join('\n');
-        final withHeader = '${templateLines.join('\n')}\n\n${withoutHeader.trim()}';
+        final withHeader =
+            '${templateLines.join('\n')}\n\n${withoutHeader.trim()}';
         await writeFile(filePath, withHeader);
         break;
       }
