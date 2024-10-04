@@ -1,9 +1,11 @@
 //.title
 // ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓
 //
-// 🇽🇾🇿 & Dev
+// Dart/Flutter (DF) Packages by DevCetra.com & contributors. The use of this
+// source code is governed by an MIT-style license described in the LICENSE
+// file located in this project's root directory.
 //
-// Licencing details are in the LICENSE file in the root directory.
+// See: https://opensource.org/license/mit
 //
 // ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓
 //.title~
@@ -34,31 +36,31 @@ Future<void> generateCommentHeaders({
     },
     categorizedPathPatterns: [
       const CategorizedPattern(
-        pattern: r'^(?!.*\.g\..*\.dart$).*\.dart$',
+        pattern: r'^(?!.*\.g\.dart$).*\.dart$',
         category: _Languages.DART,
       ),
       const CategorizedPattern(
-        pattern: r'^(?!.*\.g\..*\.md$).*\.md$',
-        category: _Languages.MD,
-      ),
-      const CategorizedPattern(
-        pattern: r'^(?!.*\.g\..*\.js$).*\.js$',
+        pattern: r'^(?!.*\.g\.js$).*\.js$',
         category: _Languages.JS,
       ),
       const CategorizedPattern(
-        pattern: r'^(?!.*\.g\..*\.jsonc$).*\.jsonc$',
+        pattern: r'^(?!.*\.g\.jsonc$).*\.jsonc$',
         category: _Languages.JSONC,
       ),
       const CategorizedPattern(
-        pattern: r'^(?!.*\.g\..*\.yaml$).*\.yaml$',
+        pattern: r'^(?!.*\.g\.yaml$).*\.yaml$',
         category: _Languages.YAML,
       ),
       const CategorizedPattern(
-        pattern: r'^(?!.*\.g\..*\.ts$).*\.ts$',
+        pattern: r'^(?!.*\.g\.yml$).*\.yml$',
+        category: _Languages.YML,
+      ),
+      const CategorizedPattern(
+        pattern: r'^(?!.*\.g\.ts$).*\.ts$',
         category: _Languages.TS,
       ),
       const CategorizedPattern(
-        pattern: r'^(?!.*\.g\..*\.ps1$).*\.ps1$',
+        pattern: r'^(?!.*\.g\.ps1$).*\.ps1$',
         category: _Languages.PS1,
       ),
     ],
@@ -77,19 +79,23 @@ Future<void> generateCommentHeaders({
     await _generateForFile(fileResult, templateLines);
   }
 
-  Here().debugLogStop('Done!');
+  // ---------------------------------------------------------------------------
+
+  // Notify end.
+  debugLogStop('Done!');
 }
 
 // ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
 
 Future<void> _generateForFile(
-    FilePathExplorerResult fileResult, List<String> templateLines,) async {
+  FilePathExplorerResult fileResult,
+  List<String> templateLines,
+) async {
   if (!_Languages.values.contains(fileResult.category)) return;
 
   final filePath = fileResult.path;
 
-  final commentStarter =
-      langFileCommentStarters[p.extension(filePath).toLowerCase()] ?? '//';
+  final commentStarter = langFileCommentStarters[p.extension(filePath).toLowerCase()] ?? '//';
   final lines = (await readFileAsLines(filePath)) ?? [];
 
   if (lines.isNotEmpty) {
@@ -105,8 +111,7 @@ Future<void> _generateForFile(
       final line = lines[n].trim();
       if (line.isEmpty || !line.startsWith(commentStarter)) {
         final withoutHeader = lines.sublist(n).join('\n');
-        final withHeader =
-            '${templateLines.join('\n')}\n\n${withoutHeader.trim()}';
+        final withHeader = '${templateLines.join('\n')}\n\n${withoutHeader.trimLeft()}';
         await writeFile(filePath, withHeader);
         break;
       }
@@ -120,10 +125,10 @@ enum _Languages {
   DART,
   JS,
   JSONC,
-  MD,
   PS1,
   TS,
   YAML,
+  YML,
 }
 
 // ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
@@ -135,6 +140,7 @@ final langFileCommentStarters = {
   '.cfg': '##', // Configuration files
   '.clj': ';', // Clojure
   '.cob': '*>', // COBOL
+  '.dart': '//', // Erlang
   '.erl': '%', // Erlang
   '.exs': '##', // Elixir
   '.f90': '!', // Fortran
@@ -160,5 +166,6 @@ final langFileCommentStarters = {
   '.vbs': "'", // VBScript
   '.vim': '"', // Vim script
   '.yaml': '##', // YAML
+  '.yml': '##', // YAML
   '.zsh': '##', // Zsh
 }.map((k, v) => MapEntry(k.toLowerCase(), v));
