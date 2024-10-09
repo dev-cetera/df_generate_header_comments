@@ -97,7 +97,8 @@ Future<void> _generateForFile(
 
   final filePath = fileResult.path;
 
-  final commentStarter = langFileCommentStarters[p.extension(filePath).toLowerCase()] ?? '//';
+  final commentStarter =
+      langFileCommentStarters[p.extension(filePath).toLowerCase()] ?? '//';
   final lines = (await readFileAsLines(filePath)) ?? [];
 
   if (lines.isNotEmpty) {
@@ -113,7 +114,8 @@ Future<void> _generateForFile(
       final line = lines[n].trim();
       if (line.isEmpty || !line.startsWith(commentStarter)) {
         final withoutHeader = lines.sublist(n).join('\n');
-        final withHeader = '${templateLines.join('\n')}\n\n${withoutHeader.trimLeft()}';
+        final withHeader =
+            '${templateLines.join('\n')}\n\n${withoutHeader.trimLeft()}';
         await writeFile(filePath, withHeader);
         break;
       }
