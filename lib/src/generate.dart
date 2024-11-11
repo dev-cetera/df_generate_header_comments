@@ -97,8 +97,10 @@ Future<void> _generateForFile(
 
   final filePath = fileResult.path;
 
-  final commentStarter = langFileCommentStarters[p.extension(filePath).toLowerCase()] ?? '//';
-  final lines = (await FileSystemUtility.i.readLocalFileAsLinesOrNull(filePath)) ?? [];
+  final commentStarter =
+      langFileCommentStarters[p.extension(filePath).toLowerCase()] ?? '//';
+  final lines =
+      (await FileSystemUtility.i.readLocalFileAsLinesOrNull(filePath)) ?? [];
 
   if (lines.isNotEmpty) {
     // Replace leading '//' in all template lines with the comment starter
@@ -113,7 +115,8 @@ Future<void> _generateForFile(
       final line = lines[n].trim();
       if (line.isEmpty || !line.startsWith(commentStarter)) {
         final withoutHeader = lines.sublist(n).join('\n');
-        final withHeader = '${templateLines.join('\n')}\n\n${withoutHeader.trimLeft()}';
+        final withHeader =
+            '${templateLines.join('\n')}\n\n${withoutHeader.trimLeft()}';
         await FileSystemUtility.i.writeLocalFile(filePath, withHeader);
         break;
       }
