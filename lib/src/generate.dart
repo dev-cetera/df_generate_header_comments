@@ -20,7 +20,7 @@ Future<void> generateCommentHeaders({
   Set<String> rootDirPaths = const {},
   Set<String> subDirPaths = const {},
   Set<String> pathPatterns = const {},
-  required String templateFilePath,
+  required String templatePathOrUrl,
 }) async {
   // Notify start.
   printBlue('Starting generator. Please wait...');
@@ -28,7 +28,7 @@ Future<void> generateCommentHeaders({
   // Explore all source paths.
   final sourceFileExporer = PathExplorer(
     dirPathGroups: {
-      CombinedPaths(
+      MatchedPathPowerset(
         rootDirPaths,
         subPaths: subDirPaths,
         pathPatterns: pathPatterns,
@@ -70,7 +70,7 @@ Future<void> generateCommentHeaders({
   // ---------------------------------------------------------------------------
 
   final templateLines = extractCodeFromMarkdown(
-    await loadFileFromPathOrUrl(templateFilePath),
+    (await FileSystemUtility.i.readFileFromPathOrUrl(templatePathOrUrl))!,
   ).trim().split('\n');
 
   // ---------------------------------------------------------------------------
@@ -97,9 +97,8 @@ Future<void> _generateForFile(
 
   final filePath = fileResult.path;
 
-  final commentStarter =
-      langFileCommentStarters[p.extension(filePath).toLowerCase()] ?? '//';
-  final lines = (await readFileAsLines(filePath)) ?? [];
+  final commentStarter = langFileCommentStarters[p.extension(filePath).toLowerCase()] ?? '//';
+  final lines = (await FileSystemUtility.i.readLocalFileAsLinesOrNull(filePath)) ?? [];
 
   if (lines.isNotEmpty) {
     // Replace leading '//' in all template lines with the comment starter
@@ -114,9 +113,8 @@ Future<void> _generateForFile(
       final line = lines[n].trim();
       if (line.isEmpty || !line.startsWith(commentStarter)) {
         final withoutHeader = lines.sublist(n).join('\n');
-        final withHeader =
-            '${templateLines.join('\n')}\n\n${withoutHeader.trimLeft()}';
-        await writeFile(filePath, withHeader);
+        final withHeader = '${templateLines.join('\n')}\n\n${withoutHeader.trimLeft()}';
+        await FileSystemUtility.i.writeLocalFile(filePath, withHeader);
         break;
       }
     }

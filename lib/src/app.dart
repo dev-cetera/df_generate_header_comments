@@ -58,7 +58,7 @@ Future<void> generateCommentHeadersApp(List<String> args) async {
       ),
     onResults: (parser, results) {
       return _ArgsChecker(
-        templateFilePath: results['template'] as String?,
+        templatePathOrUrl: results['template'] as String?,
         rootPaths: splitArg(results['roots'])?.toSet(),
         subPaths: splitArg(results['subs'])?.toSet(),
         pathPatterns: splitArg(results['patterns'])?.toSet(),
@@ -69,7 +69,7 @@ Future<void> generateCommentHeadersApp(List<String> args) async {
         rootDirPaths: args.rootPaths ?? const {},
         subDirPaths: args.subPaths ?? const {},
         pathPatterns: args.pathPatterns ?? {},
-        templateFilePath: args.templateFilePath!,
+        templatePathOrUrl: args.templatePathOrUrl!,
       );
     },
   );
@@ -85,7 +85,7 @@ class _ArgsChecker extends ValidArgsChecker {
   final Set<String>? rootPaths;
   final Set<String>? subPaths;
   final Set<String>? pathPatterns;
-  final String? templateFilePath;
+  final String? templatePathOrUrl;
 
   //
   //
@@ -95,7 +95,7 @@ class _ArgsChecker extends ValidArgsChecker {
     required this.rootPaths,
     required this.subPaths,
     required this.pathPatterns,
-    required this.templateFilePath,
+    required this.templatePathOrUrl,
   });
 
   //
@@ -112,7 +112,7 @@ class _ArgsChecker extends ValidArgsChecker {
       paths,
       ...paths,
       if (pathPatterns != null) pathPatterns,
-      if (templateFilePath != null) templateFilePath,
+      if (templatePathOrUrl != null) templatePathOrUrl,
     ];
   }
 }
