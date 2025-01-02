@@ -161,9 +161,11 @@ Future<void> _generateForFile(
   String filePath,
   String template,
 ) async {
-  final commentStarter = langFileCommentStarters[p.extension(filePath).toLowerCase()] ?? '//';
+  final commentStarter =
+      langFileCommentStarters[p.extension(filePath).toLowerCase()] ?? '//';
   var templateLines = template.split('\n');
-  final sourceLines = (await FileSystemUtility.i.readLocalFileAsLinesOrNull(filePath)) ?? [];
+  final sourceLines =
+      (await FileSystemUtility.i.readLocalFileAsLinesOrNull(filePath)) ?? [];
   if (sourceLines.isNotEmpty) {
     // Replace leading '//' in all template lines with the comment starter
     templateLines = templateLines.map((line) {
@@ -177,7 +179,8 @@ Future<void> _generateForFile(
       final line = sourceLines[n].trim();
       if (line.isEmpty || !line.startsWith(commentStarter)) {
         final withoutHeader = sourceLines.sublist(n).join('\n');
-        final withHeader = '${templateLines.join('\n')}\n\n${withoutHeader.trimLeft()}';
+        final withHeader =
+            '${templateLines.join('\n')}\n\n${withoutHeader.trimLeft()}';
         await FileSystemUtility.i.writeLocalFile(filePath, withHeader);
         break;
       }
@@ -200,7 +203,8 @@ bool _isAllowedFileName(String e) {
   return !lc.startsWith('_') &&
       !lc.contains('${p.separator}_') &&
       !lc.endsWith('.g.dart') &&
-      langFileCommentStarters.keys.any((ext) => lc.endsWith(ext.trim().toLowerCase()));
+      langFileCommentStarters.keys
+          .any((ext) => lc.endsWith(ext.trim().toLowerCase()));
 }
 
 final langFileCommentStarters = {
