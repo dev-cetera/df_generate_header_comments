@@ -1,7 +1,7 @@
 ##.title
 ## ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓
 ##
-## Dart/Flutter (DF) Packages by DevCetra.com & contributors. The use of this
+## Dart/Flutter (DF) Packages by dev-cetera.com & contributors. The use of this
 ## source code is governed by an MIT-style license described in the LICENSE
 ## file located in this project's root directory.
 ##
@@ -12,8 +12,8 @@
 
 name: df_generate_header_comments
 description: A tool to generate header comments for your source files.
-version: 0.3.1
-repository: https://github.com/robmllze/df_generate_header_comments
+version: 0.4.0
+repository: https://github.com/dev_cetera/df_generate_header_comments
 funding:
   - https://www.buymeacoffee.com/robmllze
 topics:
@@ -35,17 +35,16 @@ dependencies:
   df_gen_core: ^0.4.5
   df_log: ^0.2.4
 
-  path: ^1.9.1
+  path: 1.9.0
   args: ^2.6.0
 
 ## -----------------------------------------------------------------------------
 
 dev_dependencies:
-  lints: ^5.1.0
+  lints: ^5.0.0
 
 ## -----------------------------------------------------------------------------
 
 executables:
-  dfhdr: dfhdr
-  dfhdr-df: dfhdr-df
-  dfhdr-v1: dfhdr-v1
+  gen-header-comments: gen_header_comments
+  gen-header-comments-df: gen_header_comments_df

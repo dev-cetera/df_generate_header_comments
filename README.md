@@ -1,8 +1,6 @@
-# DF - Generate Header Comments
-
 <a href="https://www.buymeacoffee.com/robmllze" target="_blank"><img align="right" src="https://cdn.buymeacoffee.com/buttons/default-orange.png" alt="Buy Me A Coffee" height="41" width="174"></a>
 
-Dart & Flutter Packages by DevCetra.com & contributors.
+Dart & Flutter Packages by dev-cetera.com & contributors.
 
 [![Pub Package](https://img.shields.io/pub/v/df_generate_header_comments.svg)](https://pub.dev/packages/df_generate_header_comments)
 [![MIT License](https://img.shields.io/badge/License-MIT-blue.svg)](https://raw.githubusercontent.com/robmllze/df_generate_header_comments/main/LICENSE)
