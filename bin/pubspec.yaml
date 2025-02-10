@@ -12,7 +12,6 @@
 
 name: generate_header_comments
 publish_to: none
-
 ## -----------------------------------------------------------------------------
 
 environment:
