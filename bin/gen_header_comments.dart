@@ -20,6 +20,6 @@ void main(List<String> args) async {
   await genHeaderComments(
     args,
     defaultTemplate:
-        'https://raw.githubusercontent.com/robmllze/df_generate_comment_headers/main/templates/v1.dart.md',
+        'https://raw.githubusercontent.com/dev-cetera/df_generate_comment_headers/main/templates/v1.dart.md',
   );
 }

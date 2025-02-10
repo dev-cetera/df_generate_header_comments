@@ -111,11 +111,10 @@ Future<void> genHeaderComments(
     printWhite,
     'Reading template at: $template...',
   );
-  final result = await MdTemplateUtility.i.readTemplateFromPathOrUrl(
-    template,
-  );
+  // ignore: invalid_use_of_visible_for_testing_member
+  final result = (await MdTemplateUtility.i.readTemplateFromPathOrUrl(template).toSync()).value;
 
-  if (result.isErr) {
+  if (result.isErr()) {
     spinner.stop();
     _print(
       printRed,
