@@ -26,9 +26,7 @@ Future<void> genHeaderComments(
         'A tool for generating header comments for your source files. Ignores files that starts with underscores.',
     example: 'gen-header-comments -i .',
     params: [
-      DefaultFlags.HELP.flag.copyWith(
-        negatable: true,
-      ),
+      DefaultFlags.HELP.flag.copyWith(negatable: true),
       DefaultOptions.INPUT_PATH.option.copyWith(
         defaultsTo: FileSystemUtility.i.currentDir,
       ),
@@ -46,10 +44,7 @@ Future<void> genHeaderComments(
 
   final help = argResults.flag(DefaultFlags.HELP.name);
   if (help) {
-    _print(
-      printCyan,
-      parser.getInfo(argParser),
-    );
+    _print(printCyan, parser.getInfo(argParser));
     exit(ExitCodes.SUCCESS.code);
   }
 
@@ -75,10 +70,7 @@ Future<void> genHeaderComments(
 
   // ---------------------------------------------------------------------------
 
-  _print(
-    printWhite,
-    'Looking for files..',
-  );
+  _print(printWhite, 'Looking for files..');
   final filePathStream0 = PathExplorer(inputPath).exploreFiles();
   final filePathStream1 = filePathStream0.where((e) {
     final path = p.relative(e.path, from: inputPath);
@@ -88,97 +80,76 @@ Future<void> genHeaderComments(
   try {
     findings = await filePathStream1.toList();
   } catch (e) {
-    _print(
-      printRed,
-      'Failed to read file tree!',
-      spinner,
-    );
+    _print(printRed, 'Failed to read file tree!', spinner);
     exit(ExitCodes.FAILURE.code);
   }
   if (findings.isEmpty) {
     spinner.stop();
-    _print(
-      printYellow,
-      'No files found in $inputPath!',
-    );
+    _print(printYellow, 'No files found in $inputPath!');
     exit(ExitCodes.SUCCESS.code);
   }
 
   // ---------------------------------------------------------------------------
 
   String templateData;
-  _print(
-    printWhite,
-    'Reading template at: $template...',
-  );
+  _print(printWhite, 'Reading template at: $template...');
 
-  final result = (await MdTemplateUtility.i.readTemplateFromPathOrUrl(template).toSync())
-      // ignore: invalid_use_of_visible_for_testing_member
-      .value;
+  final result =
+      (await MdTemplateUtility.i.readTemplateFromPathOrUrl(template).toSync())
+          // ignore: invalid_use_of_visible_for_testing_member
+          .value;
 
   if (result.isErr()) {
     spinner.stop();
-    _print(
-      printRed,
-      ' Failed to read template!',
-    );
+    _print(printRed, ' Failed to read template!');
     exit(ExitCodes.FAILURE.code);
   }
   templateData = result.unwrap();
 
   // ---------------------------------------------------------------------------
 
-  _print(
-    printWhite,
-    'Generating...',
-    spinner,
-  );
+  _print(printWhite, 'Generating...', spinner);
 
   for (final finding in findings) {
     final filePath = finding.path;
     try {
       await _generateForFile(filePath, templateData);
     } catch (_) {
-      _print(
-        printRed,
-        'Failed to write at: $filePath',
-        spinner,
-      );
+      _print(printRed, 'Failed to write at: $filePath', spinner);
     }
   }
 
   // ---------------------------------------------------------------------------
 
   spinner.stop();
-  _print(
-    printGreen,
-    'Done!',
-  );
+  _print(printGreen, 'Done!');
 }
 
 // ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
 
-Future<void> _generateForFile(
-  String filePath,
-  String template,
-) async {
-  final commentStarter = langFileCommentStarters[p.extension(filePath).toLowerCase()] ?? '//';
+Future<void> _generateForFile(String filePath, String template) async {
+  final commentStarter =
+      langFileCommentStarters[p.extension(filePath).toLowerCase()] ?? '//';
   var templateLines = template.split('\n');
-  final sourceLines = (await FileSystemUtility.i.readLocalFileAsLinesOrNull(filePath)) ?? [];
+  final sourceLines =
+      (await FileSystemUtility.i.readLocalFileAsLinesOrNull(filePath)) ?? [];
   if (sourceLines.isNotEmpty) {
     // Replace leading '//' in all template lines with the comment starter
-    templateLines = templateLines.map((line) {
-      if (line.trim().startsWith('//')) {
-        return commentStarter + line.substring(2); // Replace leading // only
-      }
-      return line; // Return the line unchanged if it doesn't start with //
-    }).toList();
+    templateLines =
+        templateLines.map((line) {
+          if (line.trim().startsWith('//')) {
+            return commentStarter +
+                line.substring(2); // Replace leading // only
+          }
+          return line; // Return the line unchanged if it doesn't start with //
+        }).toList();
 
     for (var n = 0; n < sourceLines.length; n++) {
       final line = sourceLines[n].trim();
       if (line.isEmpty || !line.startsWith(commentStarter)) {
         final withoutHeader = sourceLines.sublist(n).join('\n');
-        final withHeader = '${templateLines.join('\n')}\n\n${withoutHeader.trimLeft()}\n';
+        final withHeader =
+            '${templateLines.join('\n')}\n\n${withoutHeader.trimLeft()}\n';
         await FileSystemUtility.i.writeLocalFile(filePath, withHeader);
         break;
       }
@@ -186,11 +157,7 @@ Future<void> _generateForFile(
   }
 }
 
-void _print(
-  void Function(String) print,
-  String message, [
-  Spinner? spinner,
-]) {
+void _print(void Function(String) print, String message, [Spinner? spinner]) {
   spinner?.stop();
   print('[gen-header-comments] $message');
   spinner?.start();
@@ -201,7 +168,9 @@ bool _isAllowedFileName(String e) {
   return !lc.startsWith('_') &&
       !lc.contains('${p.separator}_') &&
       !lc.endsWith('.g.dart') &&
-      langFileCommentStarters.keys.any((ext) => lc.endsWith(ext.trim().toLowerCase()));
+      langFileCommentStarters.keys.any(
+        (ext) => lc.endsWith(ext.trim().toLowerCase()),
+      );
 }
 
 final langFileCommentStarters = {
