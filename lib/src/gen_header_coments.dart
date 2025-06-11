@@ -44,7 +44,7 @@ Future<void> genHeaderComments(
 
   final help = argResults.flag(DefaultFlags.HELP.name);
   if (help) {
-    _print(printCyan, parser.getInfo(argParser));
+    _print(Log.printCyan, parser.getInfo(argParser));
     exit(ExitCodes.SUCCESS.code);
   }
 
@@ -57,7 +57,7 @@ Future<void> genHeaderComments(
     template = argResults.option(DefaultOptions.TEMPLATE_PATH_OR_URL.name)!;
   } catch (_) {
     _print(
-      printRed,
+      Log.printRed,
       'Missing required args! Use --help flag for more information.',
     );
     exit(ExitCodes.FAILURE.code);
@@ -70,7 +70,7 @@ Future<void> genHeaderComments(
 
   // ---------------------------------------------------------------------------
 
-  _print(printWhite, 'Looking for files..');
+  _print(Log.printWhite, 'Looking for files..');
   final filePathStream0 = PathExplorer(inputPath).exploreFiles();
   final filePathStream1 = filePathStream0.where((e) {
     final path = p.relative(e.path, from: inputPath);
@@ -80,19 +80,19 @@ Future<void> genHeaderComments(
   try {
     findings = await filePathStream1.toList();
   } catch (e) {
-    _print(printRed, 'Failed to read file tree!', spinner);
+    _print(Log.printRed, 'Failed to read file tree!', spinner);
     exit(ExitCodes.FAILURE.code);
   }
   if (findings.isEmpty) {
     spinner.stop();
-    _print(printYellow, 'No files found in $inputPath!');
+    _print(Log.printYellow, 'No files found in $inputPath!');
     exit(ExitCodes.SUCCESS.code);
   }
 
   // ---------------------------------------------------------------------------
 
   String templateData;
-  _print(printWhite, 'Reading template at: $template...');
+  _print(Log.printWhite, 'Reading template at: $template...');
 
   final result =
       (await MdTemplateUtility.i.readTemplateFromPathOrUrl(template).toSync())
@@ -101,28 +101,28 @@ Future<void> genHeaderComments(
 
   if (result.isErr()) {
     spinner.stop();
-    _print(printRed, ' Failed to read template!');
+    _print(Log.printRed, ' Failed to read template!');
     exit(ExitCodes.FAILURE.code);
   }
   templateData = result.unwrap();
 
   // ---------------------------------------------------------------------------
 
-  _print(printWhite, 'Generating...', spinner);
+  _print(Log.printWhite, 'Generating...', spinner);
 
   for (final finding in findings) {
     final filePath = finding.path;
     try {
       await _generateForFile(filePath, templateData);
     } catch (_) {
-      _print(printRed, 'Failed to write at: $filePath', spinner);
+      _print(Log.printRed, 'Failed to write at: $filePath', spinner);
     }
   }
 
   // ---------------------------------------------------------------------------
 
   spinner.stop();
-  _print(printGreen, 'Done!');
+  _print(Log.printGreen, 'Done!');
 }
 
 // ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
