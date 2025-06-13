@@ -22,4 +22,3 @@ environment:
 dependencies:
   df_generate_header_comments:
     path: ../
-  df_log: ^0.2.4
