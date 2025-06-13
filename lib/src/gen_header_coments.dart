@@ -94,10 +94,7 @@ Future<void> genHeaderComments(
   String templateData;
   _print(Log.printWhite, 'Reading template at: $template...');
 
-  final result =
-      (await MdTemplateUtility.i.readTemplateFromPathOrUrl(template).toSync())
-          // ignore: invalid_use_of_visible_for_testing_member
-          .value;
+  final result = (await MdTemplateUtility.i.readTemplateFromPathOrUrl(template).value);
 
   if (result.isErr()) {
     spinner.stop();
@@ -128,28 +125,23 @@ Future<void> genHeaderComments(
 // ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
 
 Future<void> _generateForFile(String filePath, String template) async {
-  final commentStarter =
-      langFileCommentStarters[p.extension(filePath).toLowerCase()] ?? '//';
+  final commentStarter = langFileCommentStarters[p.extension(filePath).toLowerCase()] ?? '//';
   var templateLines = template.split('\n');
-  final sourceLines =
-      (await FileSystemUtility.i.readLocalFileAsLinesOrNull(filePath)) ?? [];
+  final sourceLines = (await FileSystemUtility.i.readLocalFileAsLinesOrNull(filePath)) ?? [];
   if (sourceLines.isNotEmpty) {
     // Replace leading '//' in all template lines with the comment starter
-    templateLines =
-        templateLines.map((line) {
-          if (line.trim().startsWith('//')) {
-            return commentStarter +
-                line.substring(2); // Replace leading // only
-          }
-          return line; // Return the line unchanged if it doesn't start with //
-        }).toList();
+    templateLines = templateLines.map((line) {
+      if (line.trim().startsWith('//')) {
+        return commentStarter + line.substring(2); // Replace leading // only
+      }
+      return line; // Return the line unchanged if it doesn't start with //
+    }).toList();
 
     for (var n = 0; n < sourceLines.length; n++) {
       final line = sourceLines[n].trim();
       if (line.isEmpty || !line.startsWith(commentStarter)) {
         final withoutHeader = sourceLines.sublist(n).join('\n');
-        final withHeader =
-            '${templateLines.join('\n')}\n\n${withoutHeader.trimLeft()}\n';
+        final withHeader = '${templateLines.join('\n')}\n\n${withoutHeader.trimLeft()}\n';
         await FileSystemUtility.i.writeLocalFile(filePath, withHeader);
         break;
       }
