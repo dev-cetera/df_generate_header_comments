@@ -11,14 +11,24 @@
 ##.title~
 
 name: generate_header_comments
+homepage: https://dev-cetera.com/
+repository: https://github.com/robmllze/df_generate_comment_headers
+funding:
+  - https://www.buymeacoffee.com/dev_cetera
 publish_to: none
 ## -----------------------------------------------------------------------------
 
 environment:
-  sdk: ">=3.0.0 <4.0.0"
+  sdk: ">=3.5.0 <4.0.0"
 
 ## -----------------------------------------------------------------------------
 
 dependencies:
   df_generate_header_comments:
     path: ../
+
+## -----------------------------------------------------------------------------
+
+dev_dependencies:
+  lints: ^6.0.0
+
