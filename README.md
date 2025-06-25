@@ -19,7 +19,7 @@ This tool automatically adds standardized comment headers to your source files, 
 
 ---
 
-Please refer to the [API reference](https://pub.dev/documentation/df_generate_header_comments/) for more information.
+☝️ Please refer to the [API reference](https://pub.dev/documentation/df_generate_header_comments/) for more information.
 
 ---
 
@@ -46,6 +46,7 @@ If you're enjoying this package and find it valuable, consider showing your appr
 
 <a href="https://www.buymeacoffee.com/dev_cetera" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/default-orange.png" height="40"></a>
 
-## License
+## 🧑‍⚖️ License
 
 This project is released under the [MIT License](https://raw.githubusercontent.com/dev-cetera/df_generate_header_comments/main/LICENSE). See [LICENSE](https://raw.githubusercontent.com/dev-cetera/df_generate_header_comments/main/LICENSE) for more information.
+
