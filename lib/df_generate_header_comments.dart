@@ -13,4 +13,4 @@
 /// A tool to generate header comments for your source files.
 library;
 
-export 'src/_index.g.dart';
+export 'src/_src.dart';

@@ -45,7 +45,7 @@ Future<void> generateHeaderComments(
 
   final help = argResults.flag(DefaultFlags.HELP.name);
   if (help) {
-    _print(Log.printCyan, parser.getInfo(argParser));
+    Log.printCyan(parser.getInfo(argParser));
     exit(ExitCodes.SUCCESS.code);
   }
 
@@ -59,16 +59,13 @@ Future<void> generateHeaderComments(
       DefaultOptionParams.TEMPLATE_PATH_OR_URL.name,
     )!;
   } catch (_) {
-    _print(
-      Log.printRed,
-      'Missing required args! Use --help flag for more information.',
-    );
+    Log.printRed('Missing required args! Use --help flag for more information.');
     exit(ExitCodes.FAILURE.code);
   }
 
   // ---------------------------------------------------------------------------
 
-  _print(Log.printWhite, 'Looking for files..');
+  Log.printWhite('Looking for files..');
   final filePathStream0 = PathExplorer(inputPath).exploreFiles();
   final filePathStream1 = filePathStream0.where((e) {
     final path = p.relative(e.path, from: inputPath);
@@ -78,55 +75,51 @@ Future<void> generateHeaderComments(
   try {
     findings = await filePathStream1.toList();
   } catch (e) {
-    _print(Log.printRed, 'Failed to read file tree!');
+    Log.printRed('Failed to read file tree!');
     exit(ExitCodes.FAILURE.code);
   }
   if (findings.isEmpty) {
-    _print(Log.printYellow, 'No files found in $inputPath!');
+    Log.printYellow('No files found in $inputPath!');
     exit(ExitCodes.SUCCESS.code);
   }
 
   // ---------------------------------------------------------------------------
 
   String templateData;
-  _print(Log.printWhite, 'Reading template at: $template...');
+  Log.printWhite('Reading template at: $template...');
 
-  final result = (await MdTemplateUtility.i
-      .readTemplateFromPathOrUrl(template)
-      .value);
+  final result = (await MdTemplateUtility.i.readTemplateFromPathOrUrl(template).value);
 
   if (result.isErr()) {
-    _print(Log.printRed, ' Failed to read template!');
+    Log.printRed(' Failed to read template!');
     exit(ExitCodes.FAILURE.code);
   }
   templateData = result.unwrap();
 
   // ---------------------------------------------------------------------------
 
-  _print(Log.printWhite, 'Generating...');
+  Log.printWhite('Generating...');
 
   for (final finding in findings) {
     final filePath = finding.path;
     try {
       await _generateForFile(filePath, templateData);
     } catch (_) {
-      _print(Log.printRed, 'Failed to write at: $filePath');
+      Log.printRed('Failed to write at: $filePath');
     }
   }
 
   // ---------------------------------------------------------------------------
 
-  _print(Log.printGreen, 'Done!');
+  Log.printGreen('Done!');
 }
 
 // ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
 
 Future<void> _generateForFile(String filePath, String template) async {
-  final commentStarter =
-      langFileCommentStarters[p.extension(filePath).toLowerCase()] ?? '//';
+  final commentStarter = langFileCommentStarters[p.extension(filePath).toLowerCase()] ?? '//';
   var templateLines = template.split('\n');
-  final sourceLines =
-      (await FileSystemUtility.i.readLocalFileAsLinesOrNull(filePath)) ?? [];
+  final sourceLines = (await FileSystemUtility.i.readLocalFileAsLinesOrNull(filePath)) ?? [];
   if (sourceLines.isNotEmpty) {
     // Replace leading '//' in all template lines with the comment starter
     templateLines = templateLines.map((line) {
@@ -140,17 +133,12 @@ Future<void> _generateForFile(String filePath, String template) async {
       final line = sourceLines[n].trim();
       if (line.isEmpty || !line.startsWith(commentStarter)) {
         final withoutHeader = sourceLines.sublist(n).join('\n');
-        final withHeader =
-            '${templateLines.join('\n')}\n\n${withoutHeader.trimLeft()}\n';
+        final withHeader = '${templateLines.join('\n')}\n\n${withoutHeader.trimLeft()}\n';
         await FileSystemUtility.i.writeLocalFile(filePath, withHeader);
         break;
       }
     }
   }
-}
-
-void _print(void Function(String) print, String message) {
-  print('[gen-header-comments] $message');
 }
 
 bool _isAllowedFileName(String e) {
