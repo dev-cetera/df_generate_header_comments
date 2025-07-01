@@ -59,7 +59,9 @@ Future<void> generateHeaderComments(
       DefaultOptionParams.TEMPLATE_PATH_OR_URL.name,
     )!;
   } catch (_) {
-    Log.printRed('Missing required args! Use --help flag for more information.');
+    Log.printRed(
+      'Missing required args! Use --help flag for more information.',
+    );
     exit(ExitCodes.FAILURE.code);
   }
 
@@ -88,7 +90,9 @@ Future<void> generateHeaderComments(
   String templateData;
   Log.printWhite('Reading template at: $template...');
 
-  final result = (await MdTemplateUtility.i.readTemplateFromPathOrUrl(template).value);
+  final result = (await MdTemplateUtility.i
+      .readTemplateFromPathOrUrl(template)
+      .value);
 
   if (result.isErr()) {
     Log.printRed(' Failed to read template!');
@@ -117,9 +121,11 @@ Future<void> generateHeaderComments(
 // ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
 
 Future<void> _generateForFile(String filePath, String template) async {
-  final commentStarter = langFileCommentStarters[p.extension(filePath).toLowerCase()] ?? '//';
+  final commentStarter =
+      langFileCommentStarters[p.extension(filePath).toLowerCase()] ?? '//';
   var templateLines = template.split('\n');
-  final sourceLines = (await FileSystemUtility.i.readLocalFileAsLinesOrNull(filePath)) ?? [];
+  final sourceLines =
+      (await FileSystemUtility.i.readLocalFileAsLinesOrNull(filePath)) ?? [];
   if (sourceLines.isNotEmpty) {
     // Replace leading '//' in all template lines with the comment starter
     templateLines = templateLines.map((line) {
@@ -133,7 +139,8 @@ Future<void> _generateForFile(String filePath, String template) async {
       final line = sourceLines[n].trim();
       if (line.isEmpty || !line.startsWith(commentStarter)) {
         final withoutHeader = sourceLines.sublist(n).join('\n');
-        final withHeader = '${templateLines.join('\n')}\n\n${withoutHeader.trimLeft()}\n';
+        final withHeader =
+            '${templateLines.join('\n')}\n\n${withoutHeader.trimLeft()}\n';
         await FileSystemUtility.i.writeLocalFile(filePath, withHeader);
         break;
       }

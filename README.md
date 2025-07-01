@@ -6,7 +6,7 @@ Dart & Flutter Packages by dev-cetera.com & contributors.
 [![sponsor](https://img.shields.io/badge/sponsor-grey?logo=github-sponsors)](https://github.com/sponsors/dev-cetera)
 [![patreon](https://img.shields.io/badge/patreon-grey?logo=patreon)](https://www.patreon.com/c/RobertMollentze)
 [![pub](https://img.shields.io/pub/v/df_generate_header_comments.svg)](https://pub.dev/packages/df_generate_header_comments)
-[![tag](https://img.shields.io/badge/tag-v0.5.1-purple?logo=github)](https://github.com/dev-cetera/df_generate_header_comments/tree/v0.5.1)
+[![tag](https://img.shields.io/badge/tag-v0.6.0-purple?logo=github)](https://github.com/dev-cetera/df_generate_header_comments/tree/v0.6.0)
 [![license](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/dev-cetera/df_generate_header_comments/main/LICENSE)
 
 ---
@@ -48,6 +48,7 @@ This tool automatically adds standardized comment headers to your source files, 
    ````
 
 4. Open a terminal at a desired folder then run `--headers -t path/to/header_template.md` in the terminal. This will modify source files in the folder and add the header comments.
+
 
 <!-- END _README_CONTENT -->
 
