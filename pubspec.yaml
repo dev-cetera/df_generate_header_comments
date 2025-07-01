@@ -16,7 +16,7 @@ repository: https://github.com/robmllze/df_generate_comment_headers
 funding:
   - https://www.buymeacoffee.com/dev_cetera
 description: A tool to generate header comments for your source files.
-version: 0.4.6
+version: 0.5.0
 topics:
   - source-gen
   - build-runner
@@ -32,11 +32,12 @@ environment:
 ## -----------------------------------------------------------------------------
 
 dependencies:
+  path: ^1.9.1
+  args: ^2.7.0
+
   df_config: ^0.7.5
   df_gen_core: ^0.6.16
   df_log: ^0.3.19
-  path: ^1.9.1
-  args: ^2.7.0
 
 ## -----------------------------------------------------------------------------
 
@@ -46,6 +47,6 @@ dev_dependencies:
 ## -----------------------------------------------------------------------------
 
 executables:
-  gen-header-comments: gen_header_comments
-  gen-header-comments-df: gen_header_comments_df
+  --headers: df_generate_header_comments
+  df_generate_header_comments: df_generate_header_comments
 

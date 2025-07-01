@@ -16,15 +16,16 @@ import 'package:path/path.dart' as p;
 
 // ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
 
-Future<void> genHeaderComments(
+Future<void> generateHeaderComments(
   List<String> args, {
   required String defaultTemplate,
 }) async {
+  Log.enableReleaseAsserts = true;
   final parser = CliParser(
-    title: 'dev-cetera.com/df/tools',
+    title: 'dev-cetera.com',
     description:
         'A tool for generating header comments for your source files. Ignores files that starts with underscores.',
-    example: 'gen-header-comments -i .',
+    example: 'df_generate_header_comments -i .',
     params: [
       DefaultFlags.HELP.flag.copyWith(negatable: true),
       DefaultOptions.INPUT_PATH.option.copyWith(
@@ -65,11 +66,6 @@ Future<void> genHeaderComments(
 
   // ---------------------------------------------------------------------------
 
-  final spinner = Spinner();
-  spinner.start();
-
-  // ---------------------------------------------------------------------------
-
   _print(Log.printWhite, 'Looking for files..');
   final filePathStream0 = PathExplorer(inputPath).exploreFiles();
   final filePathStream1 = filePathStream0.where((e) {
@@ -80,11 +76,10 @@ Future<void> genHeaderComments(
   try {
     findings = await filePathStream1.toList();
   } catch (e) {
-    _print(Log.printRed, 'Failed to read file tree!', spinner);
+    _print(Log.printRed, 'Failed to read file tree!');
     exit(ExitCodes.FAILURE.code);
   }
   if (findings.isEmpty) {
-    spinner.stop();
     _print(Log.printYellow, 'No files found in $inputPath!');
     exit(ExitCodes.SUCCESS.code);
   }
@@ -94,12 +89,9 @@ Future<void> genHeaderComments(
   String templateData;
   _print(Log.printWhite, 'Reading template at: $template...');
 
-  final result = (await MdTemplateUtility.i
-      .readTemplateFromPathOrUrl(template)
-      .value);
+  final result = (await MdTemplateUtility.i.readTemplateFromPathOrUrl(template).value);
 
   if (result.isErr()) {
-    spinner.stop();
     _print(Log.printRed, ' Failed to read template!');
     exit(ExitCodes.FAILURE.code);
   }
@@ -107,31 +99,28 @@ Future<void> genHeaderComments(
 
   // ---------------------------------------------------------------------------
 
-  _print(Log.printWhite, 'Generating...', spinner);
+  _print(Log.printWhite, 'Generating...');
 
   for (final finding in findings) {
     final filePath = finding.path;
     try {
       await _generateForFile(filePath, templateData);
     } catch (_) {
-      _print(Log.printRed, 'Failed to write at: $filePath', spinner);
+      _print(Log.printRed, 'Failed to write at: $filePath');
     }
   }
 
   // ---------------------------------------------------------------------------
 
-  spinner.stop();
   _print(Log.printGreen, 'Done!');
 }
 
 // ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
 
 Future<void> _generateForFile(String filePath, String template) async {
-  final commentStarter =
-      langFileCommentStarters[p.extension(filePath).toLowerCase()] ?? '//';
+  final commentStarter = langFileCommentStarters[p.extension(filePath).toLowerCase()] ?? '//';
   var templateLines = template.split('\n');
-  final sourceLines =
-      (await FileSystemUtility.i.readLocalFileAsLinesOrNull(filePath)) ?? [];
+  final sourceLines = (await FileSystemUtility.i.readLocalFileAsLinesOrNull(filePath)) ?? [];
   if (sourceLines.isNotEmpty) {
     // Replace leading '//' in all template lines with the comment starter
     templateLines = templateLines.map((line) {
@@ -145,8 +134,7 @@ Future<void> _generateForFile(String filePath, String template) async {
       final line = sourceLines[n].trim();
       if (line.isEmpty || !line.startsWith(commentStarter)) {
         final withoutHeader = sourceLines.sublist(n).join('\n');
-        final withHeader =
-            '${templateLines.join('\n')}\n\n${withoutHeader.trimLeft()}\n';
+        final withHeader = '${templateLines.join('\n')}\n\n${withoutHeader.trimLeft()}\n';
         await FileSystemUtility.i.writeLocalFile(filePath, withHeader);
         break;
       }
@@ -154,10 +142,8 @@ Future<void> _generateForFile(String filePath, String template) async {
   }
 }
 
-void _print(void Function(String) print, String message, [Spinner? spinner]) {
-  spinner?.stop();
+void _print(void Function(String) print, String message) {
   print('[gen-header-comments] $message');
-  spinner?.start();
 }
 
 bool _isAllowedFileName(String e) {
