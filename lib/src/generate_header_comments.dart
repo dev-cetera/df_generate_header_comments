@@ -55,7 +55,9 @@ Future<void> generateHeaderComments(
   late final String template;
   try {
     inputPath = argResults.option(DefaultOptionParams.INPUT_PATH.name)!;
-    template = argResults.option(DefaultOptionParams.TEMPLATE_PATH_OR_URL.name)!;
+    template = argResults.option(
+      DefaultOptionParams.TEMPLATE_PATH_OR_URL.name,
+    )!;
   } catch (_) {
     _print(
       Log.printRed,
