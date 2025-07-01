@@ -28,10 +28,10 @@ Future<void> generateHeaderComments(
     example: 'df_generate_header_comments -i .',
     params: [
       DefaultFlags.HELP.flag.copyWith(negatable: true),
-      DefaultOptions.INPUT_PATH.option.copyWith(
+      DefaultOptionParams.INPUT_PATH.option.copyWith(
         defaultsTo: FileSystemUtility.i.currentDir,
       ),
-      DefaultOptions.TEMPLATE_PATH_OR_URL.option.copyWith(
+      DefaultOptionParams.TEMPLATE_PATH_OR_URL.option.copyWith(
         defaultsTo: defaultTemplate,
       ),
     ],
@@ -54,8 +54,8 @@ Future<void> generateHeaderComments(
   late final String inputPath;
   late final String template;
   try {
-    inputPath = argResults.option(DefaultOptions.INPUT_PATH.name)!;
-    template = argResults.option(DefaultOptions.TEMPLATE_PATH_OR_URL.name)!;
+    inputPath = argResults.option(DefaultOptionParams.INPUT_PATH.name)!;
+    template = argResults.option(DefaultOptionParams.TEMPLATE_PATH_OR_URL.name)!;
   } catch (_) {
     _print(
       Log.printRed,
