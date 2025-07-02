@@ -11,6 +11,8 @@ Dart & Flutter Packages by dev-cetera.com & contributors.
 
 ---
 
+[![banner](https://github.com/dev-cetera/df_safer_dart/blob/v0.6.0/doc/assets/banner.png?raw=true)](https://github.com/dev-cetera)
+
 <!-- BEGIN _README_CONTENT -->
 
 This tool automatically adds standardized comment headers to your source files, enhancing protection, consistency, and authenticity across your codebase.
@@ -84,3 +86,4 @@ If you're enjoying this package and find it valuable, consider showing your appr
 ## 🧑‍⚖️ License
 
 This project is released under the [MIT License](https://raw.githubusercontent.com/dev-cetera/df_generate_header_comments/main/LICENSE). See [LICENSE](https://raw.githubusercontent.com/dev-cetera/df_generate_header_comments/main/LICENSE) for more information.
+
