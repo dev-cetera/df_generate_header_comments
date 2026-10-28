@@ -13,13 +13,9 @@
 
 name: df_generate_header_comments
 homepage: https://dev-cetera.com/
-repository: https://github.com/robmllze/df_generate_comment_headers
-funding:
-  - https://www.buymeacoffee.com/dev_cetera
-  - https://www.patreon.com/c/robelator
-  - https://github.com/sponsors/robelator
+repository: https://github.com/dev-cetera/df_generate_comment_headers
 description: A tool to generate header comments for your source files.
-version: 0.7.1
+version: 0.8.0
 topics:
   - source-gen
   - build-runner
